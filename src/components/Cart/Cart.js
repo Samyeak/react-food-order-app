@@ -1,27 +1,29 @@
 import React from 'react'
+import Modal from '../UI/Modal';
+import classes from './Cart.module.css';
 
-const Cart = () => {
+const Cart = ({onClose}) => {
     const tempCartlist = [
         { id: 'c1', name: 'Sushi', amount: 2, price: 12.99 }
     ];
 
   return (
-    <div>
+    <Modal onClose={onClose}>
         <CartList list={tempCartlist}/>
         <div className={classes.total}>
             <span>Total Amount</span>
             <span>35.62</span>
         </div>
         <div className={classes.actions}>
-            <button className={classes["button--alt"]}>Close</button>
+            <button className={classes["button--alt"]} onClick={onClose}>Close</button>
             <button className={classes.button}>Order</button>
         </div>
-    </div>
+    </Modal>
   )
 }
 
-const CartList = (list) =>{
-    const items = list.map(item=><CartItem item/>)
+const CartList = ({list}) =>{
+    const items = list.map(item=><CartItem item key={item.name}/>)
     return (
         <ul className={classes["cart-items"]}>
             {items}
