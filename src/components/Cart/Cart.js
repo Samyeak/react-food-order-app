@@ -1,38 +1,41 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Modal from '../UI/Modal';
 import classes from './Cart.module.css';
+import CartContext from './../../store/cart-context';
+import CartItem from './CartItem';
 
-const Cart = ({onClose}) => {
-    const tempCartlist = [
-        { id: 'c1', name: 'Sushi', amount: 2, price: 12.99 }
-    ];
+const Cart = ({ onClose }) => {
+    const cartContext = useContext(CartContext);
+    const totalAmount = cartContext.totalAmount;
+    const hasItems = cartContext.items.length > 0;
 
-  return (
-    <Modal onClose={onClose}>
-        <CartList list={tempCartlist}/>
-        <div className={classes.total}>
-            <span>Total Amount</span>
-            <span>35.62</span>
-        </div>
-        <div className={classes.actions}>
-            <button className={classes["button--alt"]} onClick={onClose}>Close</button>
-            <button className={classes.button}>Order</button>
-        </div>
-    </Modal>
-  )
-}
+    const CartList = ({ list }) => {
+        const items = list.map((item, index) => <CartItem {...item}
+            key={item.id}
+            onAdd={()=>cartContext.addItem({...item, amount: 1})}
+            onRemove={()=>cartContext.removeItem(item.id)}
+        />
+        );
+        return (
+            <ul className={classes["cart-items"]}>
+                {items}
+            </ul>
+        )
+    };
 
-const CartList = ({list}) =>{
-    const items = list.map(item=><CartItem item key={item.name}/>)
     return (
-        <ul className={classes["cart-items"]}>
-            {items}
-        </ul>
+        <Modal onClose={onClose}>
+            <CartList list={cartContext.items} />
+            <div className={classes.total}>
+                <span>Total Amount</span>
+                <span>{totalAmount}</span>
+            </div>
+            <div className={classes.actions}>
+                <button className={classes["button--alt"]} onClick={onClose}>Close</button>
+                {hasItems && <button className={classes.button}>Order</button>}
+            </div>
+        </Modal>
     )
-};
-
-const CartItem = ({name}) => (
-    <li>{name}</li>
-);
+}
 
 export default Cart;
