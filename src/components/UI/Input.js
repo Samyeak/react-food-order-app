@@ -2,11 +2,11 @@ import classes from './Input.module.css';
 
 import React from 'react'
 
-const Input = () => {
+const Input = ({input, label}) => {
   return (
     <div className={classes.input}>
-        <label htmlFor={props.input.id}>{props.label}</label>
-        <input {...props.input}/>
+        <label htmlFor={input.id}>{label}</label>
+        <input {...input}/>
     </div>
   )
 }
